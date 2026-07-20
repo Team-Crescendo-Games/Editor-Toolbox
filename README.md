@@ -1,5 +1,7 @@
 # Unity Editor Toolbox
 
+> This package is a [Team Crescendo](https://github.com/Team-Crescendo-Games) fork of the original [Unity Editor Toolbox](https://github.com/arimger/Unity-Editor-Toolbox) by Miłosz Matkowski (arimger). It has been updated for Unity 6 and adapted with several attribute additions and removals — see the [CHANGELOG](./CHANGELOG.md) for details.
+
 ## Introduction
 
 Improve usability and clarity of key features in Unity Editor for better workflow!
@@ -12,7 +14,7 @@ It's worth to mention that prepared drawers are based on the custom, layout-base
 Learn all the details about the main features below.
 
 ## System Requirements
-Unity 2018.x or newer
+Unity 6000.0 (Unity 6) or newer
 
 ## Dependencies
 
@@ -23,13 +25,9 @@ Unity 2018.x or newer
 - Install Editor Toolbox package:
 	- 1 way: Find Unity Package Manager (Window/Package Manager) and add package using this git URL:
 	```
-	https://github.com/arimger/Unity-Editor-Toolbox.git#upm
+	https://github.com/Team-Crescendo-Games/Unity-Editor-Toolbox.git#upm
 	```
 	- 2 way: Copy and paste `Assets/Editor Toolbox` directory into your project (Assets/...) + add dependencies
-	- 3 way: Install via [OpenUPM registry](https://openupm.com):
-	```
-	openupm add com.browar.editor-toolbox
-	```
 - Open Edit/Project Settings/Editor Toolbox window
 - If settings file is not found, press the "Refresh" button or create a new one
 - Manage settings in your way
@@ -51,13 +49,13 @@ Unity 2018.x or newer
 		- [Toolbox Condition Attributes](#toolboxcondition)
 		- [Toolbox Property (Self/List) Attributes](#toolboxproperty)
 		- [Toolbox Special Attributes](#toolboxspecial)
+		- [Method Buttons](#methodbutton)
 		- [Toolbox Archetype Attributes](#toolboxarchetype)
 		- [SerializeReference (ReferencePicker)](#toolboxreference)
 		- [Toolbox Custom Editors](#toolboxeditors)
 	- [Material Drawers](#materialdrawers)
 - [Serialized Types](#serialized-types)
 	- [SerializedType](#serializedtype)
-	- [SerializedScene](#serializedscene)
 	- [SerializedDictionary](#serializeddictionary)
 	- [SerializedDateTime](#serializeddatetime)
 	- [SerializedDirectory](#serializeddirectory)
@@ -183,18 +181,6 @@ public string var1;
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/directory1.png)\
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/directory2.png)
 
-#### SceneNameAttribute
-
-Supported types: **string**.
-
-```csharp
-[SceneName]
-public string sceneName;
-```
-
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/scenename1.png)\
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/scenename2.png)
-
 #### PresetAttribute
 
 Supported types: **all**.
@@ -270,6 +256,22 @@ public int bigNumber;
 
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/formattednumber.png)
 
+#### OnValueChangedAttribute
+
+Supported types: **all**.
+
+Calls the given callback each time the associated property is changed in the Inspector.
+
+```csharp
+[OnValueChanged(nameof(OnVar1Changed))]
+public int var1;
+
+private void OnVar1Changed()
+{
+	Debug.Log("var1 changed");
+}
+```
+
 #### AnimationCurveSettingsAttribute
 
 Supported types: **AnimationCurve**.
@@ -323,7 +325,7 @@ public GameObject var1
 
 Drawers are based on classes inherited from the **ToolboxDrawer** class and associated **ToolboxAttribute**. With this powerful custom system you are able to create really flexible drawers. You can use them without limitations (they work with sub-classes and as array children). Every ToolboxDrawer is layout-based. For proper work they need at least one settings file located in your project. You can find predefined one here - `Editor Toolbox/EditorSettings.asset`.
 
-Examples **'How to'** create custom ToolboxDrawers you can find [HERE](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Assets/Editor%20Toolbox/HOWTO.md).
+Examples **'How to'** create custom ToolboxDrawers you can find [HERE](./HOWTO.md).
 
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/inspector.png)
 
@@ -353,8 +355,13 @@ public int var2;
 public GameObject gameObject;
 [SpaceArea]
 [EndHorizontalGroup]
-[ReorderableList]
 public int[] ints;
+```
+```csharp
+[BeginVertical]
+public int var1;
+[EndVertical]
+public int var2;
 ```
 ```csharp
 [BeginIndent]
@@ -383,22 +390,24 @@ public int var1;
 
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/horizontal.png)
 
+> [!NOTE]
+> The old field-targeted `[EditorButton]` attribute has been **removed** in this fork. Use the method-targeted `[MethodButton]` attribute instead (see [Method Buttons](#methodbutton)).
+
 ```csharp
-[EditorButton(nameof(MyMethod), "<b>My</b> Custom Label", activityType: ButtonActivityType.OnPlayMode, ValidateMethodName = nameof(ValidationMethod), PositionType = ButtonPositionType.Above)]
+[GuiColor("#FF6666")]
 public int var1;
-
-private void MyMethod()
-{
-	Debug.Log("MyMethod is invoked");
-}
-
-private bool ValidationMethod()
-{
-	return var1 == 0;
-}
+```
+```csharp
+[GuiColor(0.4f, 1.0f, 0.4f)]
+public int var2;
 ```
 
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/button.png)
+```csharp
+[Line]
+public int var1;
+[Line(thickness: 2.0f, padding: 12.0f, HexColor = "#FFD666")]
+public int var2;
+```
 
 ```csharp
 [Help("Help information", UnityMessageType.Warning, Order = -1)]
@@ -484,7 +493,7 @@ public int var1;
 ```
 
 ```csharp
-[Disable, ReorderableList]
+[Disable]
 public int[] vars1 = new [] { 1, 2, 3, 4 };
 ```
 
@@ -523,41 +532,24 @@ public MyCustomType var1;
 
 ##### Reorderable List
 
-Custom implementation of standard ReorderableList (UnityEditorInternal). Usable as an attribute in serialized fields or a single object in custom Editors.
+> [!NOTE]
+> The `[ReorderableList]` and `[ReorderableListExposed]` field attributes have been **removed** in this fork. The underlying `ReorderableList` class is still available for use within custom Editors.
+
+Custom implementation of the standard ReorderableList (UnityEditorInternal). Usable as a single object in custom Editors.
 
 ```csharp
 var list = new ReorderableList(SerializedProperty property, string elementLabel, bool draggable, bool hasHeader, bool fixedSize);
 ```
-```csharp
-[ReorderableList, InLineEditor]
-public Canvas[] vars1;
-```
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/list4.png)
-```csharp
-[ReorderableList(ListStyle.Lined, "Item", Foldable = false)]
-public List<int> linedStyleList;
-```
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/list1.png)
-```csharp
-[ReorderableList(ListStyle.Round)]
-public List<string> standardStyleList;
-```
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/list2.png)
-```csharp
-[ReorderableList(ListStyle.Boxed, fixedSize: true)]
-public GameObject[] boxedStyleList = new GameObject[4];
-```
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/list3.png)
 
+##### RegexValueAttribute
+
+Supported types: **string**.
+
+Validates the target's value against a regular expression pattern and displays an optional message when the value doesn't match.
 
 ```csharp
-[ReorderableListExposed(OverrideNewElementMethodName = nameof(GetValue))]
-public int[] list;
-
-private int GetValue()
-{
-	return list.Length + Random.Range(0, 4);
-}
+[RegexValue(@"^[a-zA-Z0-9]+$", "Only alphanumeric characters are allowed")]
+public string var1;
 ```
 
 ##### ScrollableItemsAttribute
@@ -649,6 +641,34 @@ public SampleClass1 var1;
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/labelbychild1.png)
 
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/labelbychild2.png)
+
+#### Method Buttons <a name="methodbutton"></a>
+
+**[MethodButton]** is the replacement for the removed **[EditorButton]**. Unlike the old attribute, it is applied **directly to a method** (not to a neighbouring field). Buttons are drawn in an "Actions" section at the bottom of the Inspector by the `ToolboxEditor`. Works with instance and static methods, and supports multi-object editing (invokes on all selected targets) with Undo recording.
+
+Methods with parameters are supported: the button expands into a foldout where you can edit argument values before invoking. Supported parameter types: **bool, string, char, all integral types, float, double, decimal, enums, and UnityEngine.Object references**.
+
+```csharp
+[MethodButton]
+public void Print()
+{
+	Debug.Log("Invoked");
+}
+```
+
+Constructor arguments:
+- **label** (null): overrides the button label; falls back to a nicified method name.
+- **showMode** (`ShowMode.Always`): `Always`, `EditorOnly`, or `PlayModeOnly` — controls when the button is enabled.
+- **confirm** (false): if *true*, shows a confirmation dialog before invoking.
+- **confirmMessage** ("Invoke method?"): message displayed in the confirmation dialog.
+
+```csharp
+[MethodButton("Reset Health", confirm: true, confirmMessage: "Reset health to full?")]
+private void ResetHealth() { }
+
+[MethodButton(showMode: MethodButtonAttribute.ShowMode.PlayModeOnly)]
+public void SpawnEnemy(int count, bool boss) { }
+```
 
 #### Toolbox Archetype Attributes <a name="toolboxarchetype"></a>
 
@@ -796,7 +816,7 @@ You can use few custom context menu operations for the **[SerializeReference]** 
 #### Custom Editors <a name="toolboxeditors"></a>
 
 If you want to create a custom **UnityEditor.Editor** for your components and still use Toolbox-related features be sure to inherit from the **Toolbox.Editor.ToolboxEditor** class.
-More details (e.g. how to customize properties drawing) you can find in the [HOWTO](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Assets/Editor%20Toolbox/HOWTO.md) document.
+More details (e.g. how to customize properties drawing) you can find in the [HOWTO](./HOWTO.md) document.
 
 ```csharp
 using UnityEditor;
@@ -875,31 +895,6 @@ public void Usage()
 ```
 
 ![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/serializedtype.png)
-
-#### SerializedScene <a name="serializedscene"></a>
-
-Allows to serialize SceneAssets and use them in Runtime.
-
-```csharp
-public SerializedScene serializedScene;
-
-public void Usage()
-{
-	UnityEngine.SceneManagement.SceneManager.LoadScene(serializedScene.BuildIndex);
-}
-```
-
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/serializedscene.png)
-
-```csharp
-[SceneDetails]
-public SerializedScene serializedScene;
-```
-![inspector](https://github.com/arimger/Unity-Editor-Toolbox/blob/develop/Docs/scenedetails.png)
-
-Keep in mind that SerializedScene stores Scene's index, name and path. These properties are updated each time scenes collection in the Build Settings is updated or any SceneAsset is created/removed/reimported. 
-Unfortunately, you need to handle associated objects reserialization by yourself, otherwise e.g. updated indexes won't be saved. I prepared for you a static event `SceneSerializationUtility.OnCacheRefreshed` that can be used to validate SerializedScenes in your project. 
-You can link SerializedScene in a ScriptableObject and trigger reserialization (`EditorUtility.SetDirty()`) if needed, it's really convinient approach.
 
 #### SerializedDictionary<TK, TV> <a name="serializeddictionary"></a>
 

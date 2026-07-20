@@ -1,8 +1,8 @@
 {
-  "name": "com.browar.editor-toolbox",
+  "name": "com.teamcrescendo.editor-toolbox",
   "displayName": "Editor Toolbox",
-  "version": "0.14.4",
-  "unity": "2018.1",
+  "version": "1.0.0",
+  "unity": "6000.0",
   "description": "Tools, custom attributes, drawers, hierarchy overlay, and other extensions for the Unity Editor.",
   "keywords": [
     "editor",
@@ -16,8 +16,8 @@
 	"com.unity.editorcoroutines": "1.0.0"
   },
   "author": {
-    "name": "BroWar Collective",
-    "email": "milosz.matkowski96@gmail.com",
-    "url": "https://github.com/arimger"
+    "name": "Ninghua Xu",
+    "email": "ninghuax@teamcrescendo.net",
+    "url": "https://github.com/Team-Crescendo-Games"
   }
 }

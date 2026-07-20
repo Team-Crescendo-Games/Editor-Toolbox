@@ -1,6 +1,9 @@
 MIT License
 
-Copyright (c) 2019 Miłosz Matkowski(arimger)
+Copyright (c) 2025 Team Crescendo (Ninghua Xu)
+Copyright (c) 2019 Miłosz Matkowski (arimger)
+
+This package is a fork of Unity Editor Toolbox (https://github.com/arimger/Unity-Editor-Toolbox).
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

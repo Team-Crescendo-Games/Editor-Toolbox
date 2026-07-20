@@ -1,3 +1,21 @@
+## 1.0.0 [20.07.2026]
+
+Team Crescendo fork of [Unity Editor Toolbox](https://github.com/arimger/Unity-Editor-Toolbox). Rebranded to `com.teamcrescendo.editor-toolbox`, minimum Unity version raised to 6000.0.
+
+### Added:
+- `[MethodButton]` attribute — draws Inspector buttons for methods (instance/static), with parameter editing, multi-object invocation, `ShowMode` (Always/EditorOnly/PlayModeOnly), and optional confirmation dialog
+- `[OnValueChanged]` attribute — invokes a callback whenever the associated property changes
+- `[RegexValue]` attribute — validates string fields against a regular expression pattern
+- `[GuiColor]` decorator attribute — tints the GUI color of related controls
+- `[Line]` decorator attribute — draws a thin horizontal (or vertical) line
+- `[BeginVertical]` / `[EndVertical]` decorator attributes — vertical layout grouping
+
+### Removed:
+- `[EditorButton]` attribute — replaced by the method-targeted `[MethodButton]`
+- `[ReorderableList]` and `[ReorderableListExposed]` field attributes — the `ReorderableList` class remains available for custom Editors
+- `[SceneName]` attribute
+- `SerializedScene` type and the `[SceneDetails]` attribute
+
 ## 0.14.4 [11.04.2026]
 
 ### Changed:
