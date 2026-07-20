@@ -23,11 +23,9 @@ Unity 6000.0 (Unity 6) or newer
 ## Installation
 
 - Install Editor Toolbox package:
-	- 1 way: Find Unity Package Manager (Window/Package Manager) and add package using this git URL:
+	Find Unity Package Manager (Window/Package Manager) and add package using this git URL:
 	```
-	https://github.com/Team-Crescendo-Games/Unity-Editor-Toolbox.git#upm
-	```
-	- 2 way: Copy and paste `Assets/Editor Toolbox` directory into your project (Assets/...) + add dependencies
+	https://github.com/Team-Crescendo-Games/Editor-Toolbox.git
 - Open Edit/Project Settings/Editor Toolbox window
 - If settings file is not found, press the "Refresh" button or create a new one
 - Manage settings in your way
