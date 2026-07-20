@@ -1,0 +1,42 @@
+﻿using UnityEditor;
+using UnityEngine;
+
+namespace Toolbox.Editor.ContextMenu.Operations
+{
+    internal class DuplicateSerializeReferenceArrayElementOperation : IContextMenuOperation
+    {
+        public bool IsVisible(SerializedProperty property)
+        {
+            return property != null && property.propertyType == SerializedPropertyType.ManagedReference &&
+                PropertyUtility.IsSerializableArrayElement(property);
+        }
+
+        public bool IsEnabled(SerializedProperty property)
+        {
+            return true;
+        }
+
+        public void Perform(SerializedProperty property)
+        {
+            var sourceProperty = property.Copy();
+            sourceProperty.serializedObject.Update();
+            var sourceValue = sourceProperty.managedReferenceValue;
+
+            var arrayProperty = PropertyUtility.GetArray(sourceProperty);
+            var newElementIndex = arrayProperty.arraySize;
+            arrayProperty.arraySize = newElementIndex + 1;
+            //NOTE: there will be null by default anyway
+            if (sourceValue != null)
+            {
+                var targetData = JsonUtility.ToJson(sourceValue);
+                var targetValue = JsonUtility.FromJson(targetData, sourceValue.GetType());
+                var targetProperty = arrayProperty.GetArrayElementAtIndex(newElementIndex);
+                targetProperty.managedReferenceValue = targetValue;
+            }
+
+            sourceProperty.serializedObject.ApplyModifiedProperties();
+        }
+
+        public GUIContent Label => new GUIContent("Duplicate Serialize Reference Array Element");
+    }
+}
